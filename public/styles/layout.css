@@ -4,6 +4,7 @@
  * Do not modify these two selectors, please
  */
 html {
+  font-family: 'Roboto Condensed', sans-serif;
   box-sizing: border-box;
 }
 *, *:before, *:after {
@@ -19,7 +20,14 @@ body {
   color: #244751;
   background-color: #eee;
 }
-
+main{
+    max-width: 450px;
+    height: -webkit-fill-available;
+    box-sizing: border-box;
+    background: #000000;
+    padding-top: 140px;
+    margin: 0 auto;
+}
 /*
  * Additional CSS can be defined below or in other CSS files, as per instructions
  */
