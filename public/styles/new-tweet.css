@@ -1,0 +1,18 @@
+.new-tweet{
+  background:#f0f0f0;
+  padding:20px;
+  border-radius:10px;
+  margin-left: 2em;
+  margin-right: 2em;
+ 
+}
+.new-tweet h2{
+   border-bottom: 1px solid black
+}
+.new-tweet textarea {
+  width:-webkit-fill-available;
+  
+}
+.counter{
+  float: right;
+}

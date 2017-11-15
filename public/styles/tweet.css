@@ -1,0 +1,52 @@
+.tweet{ 
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top:10px;
+  border-radius:10px;
+  background:#ffffff;
+  border:1px solid black;
+  padding-bottom:20px;
+}
+.tweet img{
+  width: 62px;
+  height: 62px;
+  float:left;
+  padding:10px;
+  border-radius:10px;
+}
+.tweet .header{
+  border:20px;
+  background:#f0f0f0;
+  border-radius:10px;
+  padding-bottom:10px;
+}
+.tweet h2{
+  padding:20px;
+  padding-bottom:10px;
+  padding-top:10px;
+  border-radius:10px;
+  margin:0px;
+}
+.tweet .tweetername{
+  float:right;
+  font-size:12px;
+  color:#8f8f8f;
+  font-weight:normal;
+}
+.tweet .footer{
+  background:#ffffff;
+
+  padding:10px;
+}
+.tweet .date{
+    background:#ffffff;
+    border-radius:10px;
+    padding:10px;
+}
+.tweet .date div{
+  padding-top:10px;
+  height:20px;
+}
+.tweet .buttons{
+  float:right;
+}
