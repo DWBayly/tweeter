@@ -9,7 +9,8 @@
   div.appendChild(document.createTextNode(str));
   return div.innerHTML;
 }
- createTweetElement=function(data){
+
+ function createTweetElement(data){
   var $tweet = $('<article>').addClass('tweet');
   var $header = $('<section>').addClass('header');
   $header.append("<img scr = \'"+data.user.avatars.regular+"\' >");
@@ -20,7 +21,7 @@
   $tweet.append($footer);
   var $date = $('<section>').addClass("date");
   
-  $date.append("<div>"+Math.floor(((new Date) -data.created_at)/1000/60/60/24)+" hours ago</div>");
+  $date.append("<div>"+Math.floor(((new Date) -data.created_at)/1000/60/60/24)+" days ago</div>");
   $date.append("<div class = \'buttons\'><input type=\"image\" src=\"FLAG.jpg\" /><input type=\"image\" src=\"RETWEET.jpg\" /><input type=\"image\" src=\"LIKE.png\" /></div>");
   $tweet.append($date);
   /*<article class = "tweet">
@@ -121,8 +122,41 @@ var tweetData =  [
 // Test / driver code (temporary)
 //console.log($tweet); // to see what it looks like
 
+
+
 $(document).ready(function(){
-  var $tweets = renderTweets(tweetData);
-  $('#feeder').append($tweets);
   //console.log($tweet); 
+  $(function() {
+    $("#tweetSubmit").on('click', function () {
+      //console.log('Button clicked, performing ajax call...');
+      event.preventDefault();
+      data={"user": {
+      "name": "Default David",
+          "avatars": {
+            "small":   "test.jpg",
+            "regular": "test.jpg",
+            "large":   "test.jpg"
+          },
+          "handle": "@basick"
+        }
+     };
+     data.created_at = new Date();
+     data.content={"text":$("#tweetinput").val()};
+     $(".new-tweet").after(createTweetElement(data));
+      
+    });
+  });
+  function loadTweets() {
+    event.preventDefault();
+    $.ajax({
+        url: 'http://localhost:8080/tweets',
+        method: 'GET',
+        success: function (tweetdata) {
+          //console.log('Success: ', tweetdata);
+          var $tweets = renderTweets(tweetdata);
+          $('#feeder').append($tweets);
+        }
+      });
+  }
+  loadTweets();
 });
