@@ -10,7 +10,7 @@
   return div.innerHTML;
 }
 
- function createTweetElement(data){
+function createTweetElement(data){
   var $tweet = $('<article>').addClass('tweet');
   var $header = $('<section>').addClass('header');
   $header.append("<img scr = \'"+data.user.avatars.regular+"\' >");
@@ -127,6 +127,23 @@ var tweetData =  [
 $(document).ready(function(){
   //console.log($tweet); 
   $(function() {
+    var on = false;
+    var compose = $("#compose");
+    var html = "<section class=\"new-tweet\"><h2>Compose Tweet</h2><form><textarea id=\"tweetinput\" name=\"text\" placeholder=\"What are you humming about?\"></textarea><input id=\'tweetSubmit' type=\"submit\" value=\"Tweet\"><span class=\"counter\">140</span></form></section>"
+    compose.on('click', function () {
+      
+      console.log("compose clicked"+on);
+      if(on){
+        $(".new-tweet").replaceWith("<section class=\'new-tweet\'></section>");
+        on = false;
+      }else{
+        $(".new-tweet").replaceWith(html);
+        $("#tweetinput").select();
+        on = true;
+      }
+    });
+  });
+  $(function() {
     $("#tweetSubmit").on('click', function () {
       //console.log('Button clicked, performing ajax call...');
       event.preventDefault();
@@ -141,8 +158,13 @@ $(document).ready(function(){
         }
      };
      data.created_at = new Date();
-     data.content={"text":$("#tweetinput").val()};
-     $(".new-tweet").after(createTweetElement(data));
+     if($("#tweetinput").val().length>0 && $("#tweetinput").val().length<141){
+       data.content={"text":$("#tweetinput").val()};
+       $(".new-tweet").after(createTweetElement(data));
+     }else{
+       $("#tweetSubmit").append("<script>alert('invalid input length!');</script>");
+       $("#tweetinput").val("");
+     }
       
     });
   });
