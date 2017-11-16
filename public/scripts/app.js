@@ -40,7 +40,18 @@ function renderTweets(tweets) {
 }
 // Test / driver code (temporary). Eventually will get this from the server.
 
-
+function loadTweets() {
+  event.preventDefault();
+  $.ajax({
+    url: 'http://localhost:8080/tweets',
+    method: 'GET',
+    success: function (tweetdata) {
+      var $tweets = renderTweets(tweetdata);
+      $(".tweet").remove();
+      $('#feeder').append($tweets);
+    }
+  });
+}
 
 // Test / driver code (temporary)
 //console.log($tweet); // to see what it looks like
@@ -61,11 +72,11 @@ $(document).ready(function(){
       //console.log('Button clicked, performing ajax call...');
       event.preventDefault();
       if($("#tweetinput").val().length > 0 && $("#tweetinput").val().length < 141){
-       var result = $.ajax({
+        var result = $.ajax({
           url: 'http://localhost:8080/tweets',
           method: 'POST',
           //body:{'data':$("#tweetinput").val()},
-          data:$("#tweetinput").serialize(),
+          data: $("#tweetinput").serialize(),
           success: function (tweetdata) {
             loadTweets();
             $("#tweetinput").val("");
@@ -103,18 +114,7 @@ $(document).ready(function(){
   });
   
   
-  function loadTweets() {
-    event.preventDefault();
-    $.ajax({
-      url: 'http://localhost:8080/tweets',
-      method: 'GET',
-      success: function (tweetdata) {
-        var $tweets = renderTweets(tweetdata);
-        $(".tweet").remove();
-        $('#feeder').append($tweets);
-      }
-    });
-  }
+
   
   
   //Old code for get tweets, kept in case of stupidity

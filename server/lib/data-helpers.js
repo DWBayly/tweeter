@@ -14,18 +14,15 @@ module.exports = function makeDataHelpers(db) {
 
     // Saves a tweet to `db`
     saveTweet: function(newTweet, callback) {
-       db.collection('tweets').insertOne(newTweet, function(err, r) {
-         if(err){
-           console.log("Error in saveTweet in data-helpers.js");
-         }else{
-           //console.log("Made it to saveTweetPost ");
-         }
-       });
-
-      callback(null,true);
+      db.collection('tweets').insertOne(newTweet, function(err, r) {
+        if(err){
+          console.log("Error in saveTweet in data-helpers.js");
+        }
+      });
+      callback(null, true);
     },
     // Get all tweets in `db`, sorted by newest first
-    getTweets:function (callback) {
+    getTweets: function (callback) {
       db.collection("tweets").find().toArray((err, tweets) => {
         if (err) {
           return callback(err);
@@ -33,5 +30,5 @@ module.exports = function makeDataHelpers(db) {
         callback(null, tweets);
       });
     }
-  }
-}
+  };
+};
