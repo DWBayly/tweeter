@@ -4,6 +4,9 @@
  * Reminder: Use (and do all your DOM work in) jQuery's document ready function
  */
 //Escape string function
+"use strict";
+
+
 function escape(str) {
   var div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
@@ -20,7 +23,7 @@ function createTweetElement(data){
   $footer.append("<div class = \'tweettext\' >" + escape(data.content.text) + "</div>");
   $tweet.append($footer);
   var $date = $('<section>').addClass("date");
-  $date.append("<div>" + Math.floor(((new Date) - data.created_At) / 1000 / 60 / 60 / 24) + " days ago</div>");
+  $date.append("<div>" + Math.floor(((new Date) - data.created_at) / 1000 / 60 / 60 / 24) + " days ago</div>");
   $date.append("<div class = \'buttons\'><input type=\"image\" src=\"FLAG.jpg\" /><input type=\"image\" src=\"RETWEET.jpg\" /><input type=\"image\" src=\"LIKE.png\" /></div>");
   $tweet.append($date);
   return $tweet;
@@ -31,72 +34,12 @@ function renderTweets(tweets) {
   // takes return value and appends it to the tweets container
   var $tweets = $("<section>");
   for(var x in tweets){
-    $tweets.append(createTweetElement(tweets[x]));
+    $tweets.prepend(createTweetElement(tweets[x]));
   }
   return $tweets;
 }
 // Test / driver code (temporary). Eventually will get this from the server.
-var tweetData =  [
-  {
-    "user": {
-      "name": "Newton",
-      "avatars": {
-        "small": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_50.png",
-        "regular": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188.png",
-        "large": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_200.png"
-      },
-      "handle": "@SirIsaac"
-    },
-    "content": {
-      "text": "If I have seen further it is by standing on the shoulders of giants"
-    },
-    "created_At": 1461116232227
-  },
-  {
-    "user": {
-      "name": "Descartes",
-      "avatars": {
-        "small": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc_50.png",
-        "regular": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc.png",
-        "large": "https://vanillicon.com/7b89b0d8280b93e2ba68841436c0bebc_200.png"
-      },
-      "handle": "@rd" },
-    "content": {
-      "text": "Je pense , donc je suis"
-    },
-    "created_At": 1461113959088
-  },
-  {
-    "user": {
-      "name": "Johann von Goethe",
-      "avatars": {
-        "small": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_50.png",
-        "regular": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1.png",
-        "large": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_200.png"
-      },
-      "handle": "@johann49"
-    },
-    "content": {
-      "text": "Es ist nichts schrecklicher als eine tätige Unwissenheit."
-    },
-    "created_At": 1461113796368
-  },
-  {
-    "user": {
-      "name": "Johann von Goethe",
-      "avatars": {
-        "small": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_50.png",
-        "regular": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1.png",
-        "large": "https://vanillicon.com/d55cf8e18b47d4baaf60c006a0de39e1_200.png"
-      },
-      "handle": "@johann49"
-    },
-    "content": {
-      "text": "<script>alert('uh oh!');</script>"
-    },
-    "created_At": 1461113796368
-  }
-];
+
 
 
 // Test / driver code (temporary)
@@ -105,26 +48,38 @@ var tweetData =  [
 
 
 $(document).ready(function(){
+  $(".new-tweet").hide();
   $(function() {
-    var on = true;
     var compose = $("#compose");
     compose.on('click', function () {
-      console.log("compose clicked" + on);
-      if(on){
-        $(".new-tweet").hide();
-        on = false;
-      }else{
-        $(".new-tweet").show();
-        $("#tweetinput").select();
-        on=true;
-      }
+      compose.hide();
+      $(".new-tweet").show();
     });
   });
   $(function() {
     $("#tweetSubmit").on('click', function () {
       //console.log('Button clicked, performing ajax call...');
       event.preventDefault();
-      data = {
+      if($("#tweetinput").val().length > 0 && $("#tweetinput").val().length < 141){
+       var result = $.ajax({
+          url: 'http://localhost:8080/tweets',
+          method: 'POST',
+          //body:{'data':$("#tweetinput").val()},
+          data:$("#tweetinput").serialize(),
+          success: function (tweetdata) {
+            loadTweets();
+            $("#tweetinput").val("");
+          }
+        });
+        $("#compose").show();
+        $(".new-tweet").hide();
+        //console.log(result);
+      }else{
+        $("#tweetSubmit").append("<script>alert('invalid input length!');</script>");
+      }
+    
+    });
+    /*  var data = {
         "user": {
           "name": "Default David",
           "avatars": {
@@ -143,10 +98,11 @@ $(document).ready(function(){
         $("#tweetinput").val("");
       }else{
         $("#tweetSubmit").append("<script>alert('invalid input length!');</script>");
-        
-      }
-    });
+      }*/
+    
   });
+  
+  
   function loadTweets() {
     event.preventDefault();
     $.ajax({
@@ -154,9 +110,15 @@ $(document).ready(function(){
       method: 'GET',
       success: function (tweetdata) {
         var $tweets = renderTweets(tweetdata);
+        $(".tweet").remove();
         $('#feeder').append($tweets);
       }
     });
   }
+  
+  
+  //Old code for get tweets, kept in case of stupidity
   loadTweets();
+  
+  
 });
