@@ -16,7 +16,8 @@ function escape(str) {
 function createTweetElement(data){
   var $tweet = $('<article>').addClass('tweet');
   var $header = $('<section>').addClass('header');
-  $header.append("<img scr = \'" + data.user.avatars.regular + "\' >");
+  $header.append("<img src = \"" + data.user.avatars.regular + "\" >");
+  console.log("<img src = \"" + data.user.avatars.regular + "\" >");
   $header.append("<h2>" + data.user.name + "<div class = \"tweetername\">" + data.user.handle + "</div></h2>");
   $tweet.append($header);
   var $footer = $('<section>').addClass("footer");
